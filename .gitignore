@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+.DS_Store
+# Raw source data is not committed; place files in data/raw/ locally.
+data/raw/*
+!data/raw/.gitkeep
