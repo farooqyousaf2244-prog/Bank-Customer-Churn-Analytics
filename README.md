@@ -1,19 +1,18 @@
-# Bank Customer Churn Analytics
+ Bank Customer Churn Analytics
 
-A reproducible analytics pipeline that cleans, validates and analyses retail-bank customer data to show **who is leaving, where, and what it costs** - and turns the result into retention recommendations.
+A reproducible analytics pipeline that cleans, validates and analyses retail-bank customer data to show who is leaving, where, and what it costs - and turns the result into retention recommendations.
+Stack: Python (pandas), SQL (ANSI / PostgreSQL-compatible), Excel (source inspection).
 
-**Stack:** Python (pandas), SQL (ANSI / PostgreSQL-compatible), Excel (source inspection).
-
-## Business problem
+ Business problem
 
 Retention is cheaper than acquisition. The retention team needs to know which customer segments churn most, how much balance is at stake, and where to act first.
 
-## Headline results
+ Headline results
 
 | Metric | Value |
 |---|---|
 | Customers analysed | 10,000 |
-| Churn rate | **20.37%** (2,037 customers) |
+| Churn rate | 20.37% (2,037 customers) |
 | Balance held by churned customers | EUR 185.6M (24.3% of total) |
 | Highest-risk market | Germany - 32.4% churn, 40% of all churners |
 | Highest-risk age bands | 46-55 and 56-65 - about 50% churn |
@@ -29,9 +28,9 @@ Retention is cheaper than acquisition. The retention team needs to know which cu
 
 Full findings, evidence and recommendations: [`docs/business_insights.md`](docs/business_insights.md).
 
-> **Open data issue:** `HasCrCard` and `IsActiveMember` are identical in every row, which is almost certainly an upstream extract problem. The pipeline warns on each run. Details in [`docs/data_quality_report.md`](docs/data_quality_report.md).
+> Open data issue: `HasCrCard` and `IsActiveMember` are identical in every row, which is almost certainly an upstream extract problem. The pipeline warns on each run. Details in [`docs/data_quality_report.md`](docs/data_quality_report.md).
 
-## Quick start
+ Quick start
 
 ```bash
 pip install -r requirements.txt
@@ -43,7 +42,7 @@ make test         # 18 automated tests
 Without `make`: `PYTHONPATH=src python -m churn_analytics run`.
 Place `Bank_Churn_Messy.xlsx` (sheets `Customer_Info`, `Account_Info`) in `data/raw/` for the `run` / `clean` commands.
 
-## How it works
+ How it works
 
 ```
 Bank_Churn_Messy.xlsx
@@ -57,7 +56,7 @@ bank_churn_cleaned.csv
 outputs/*.csv  +  outputs/figures/*.png  +  sql/ (same analysis in SQL)
 ```
 
-## Project structure
+ Project structure
 
 ```text
 bank-churn-analytics/
@@ -83,24 +82,24 @@ bank-churn-analytics/
 └── requirements.txt
 ```
 
-## Quality controls
+ Quality controls
 
-- **Validation gate:** the pipeline stops if the key is not unique, categories or ranges are invalid, or nulls appear.
-- **Rules in one place:** `config.py` holds mappings and thresholds; no magic numbers in the logic.
-- **Tests:** unit tests on a deliberately messy fixture, plus reconciliation that segment tables sum to the dataset totals.
-- **SQL parity test:** the SQL queries are executed against the cleaned data and checked against the pandas results.
-- **Logged cleaning actions:** every imputation or removal is reported with a row count.
+- Validation gate: the pipeline stops if the key is not unique, categories or ranges are invalid, or nulls appear.
+- Rules in one place: `config.py` holds mappings and thresholds; no magic numbers in the logic.
+- Tests: unit tests on a deliberately messy fixture, plus reconciliation that segment tables sum to the dataset totals.
+- SQL parity test:** the SQL queries are executed against the cleaned data and checked against the pandas results.
+- Logged cleaning actions:** every imputation or removal is reported with a row count.
 
-## Methodology notes
+ Methodology notes
 
 - Lift = segment churn rate / overall churn rate.
 - Missing age and placeholder salaries are median-imputed (3 salary rows affected in the cleaned file).
 - Segment cut-offs are identical in Python and SQL (`config.py` and `02_analysis.sql`).
 
-## Limitations
+ Limitations
 
 Descriptive analysis only: it identifies where churn is high, not why, and it builds no predictive model. The data has no time dimension. Segments overlap, so rates are not additive.
 
-## Possible next steps
+ Possible next steps
 
 Logistic-regression or gradient-boosting churn model with a hold-out evaluation; cost-benefit sizing of retention offers; scheduled refresh of the pipeline.
